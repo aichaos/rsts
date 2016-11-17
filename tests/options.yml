@@ -1,0 +1,124 @@
+################################################################################
+# RiveScript Test Suite (RSTS)                                                 #
+# -----------------------------------------------------------------------------#
+# For information on the format of this file, see the README.md at the         #
+# root of the `rsts` repo.                                                     #
+################################################################################
+
+# Parser Option Tests
+
+# TODO: forceCase and stringify (JS)
+
+concat:
+  tests:
+    # The concat option is file scoped and doesn't persist across streams.
+    - source: |
+        // Default concat mode = none
+        + test concat default
+        - Hello
+        ^ world!
+
+        ! local concat = space
+        + test concat space
+        - Hello
+        ^ world!
+
+        ! local concat = none
+        + test concat none
+        - Hello
+        ^ world!
+
+        ! local concat = newline
+        + test concat newline
+        - Hello
+        ^ world!
+
+        // invalid concat setting is equivalent to 'none'
+        ! local concat = foobar
+        + test concat foobar
+        - Hello
+        ^ world!
+
+        // the option is file scoped so it can be left at
+        // any setting and won't affect subsequent parses
+        ! local concat = newline
+
+    - source: |
+        // concat mode should be restored to the default in a
+        // separate file/stream parse
+        + test concat second file
+        - Hello
+        ^ world!
+
+    - input: "test concat default"
+      reply: "Helloworld!"
+
+    - input: "test concat space"
+      reply: "Hello world!"
+
+    - input: "test concat none"
+      reply: "Helloworld!"
+
+    - input: "test concat newline"
+      reply: "Hello\nworld!"
+
+    - input: "test concat foobar"
+      reply: "Helloworld!"
+
+    - input: "test concat second file"
+      reply: "Helloworld!"
+
+test_concat_newline_with_conditionals:
+  tests:
+    - source: |
+        ! local concat = newline
+
+        + test *
+        * <star1> == a => First A line
+        ^ Second A line
+        ^ Third A line
+        - First B line
+        ^ Second B line
+        ^ Third B line
+
+    - input: "test A"
+      reply: "First A line\nSecond A line\nThird A line"
+
+    - input: "test B"
+      reply: "First B line\nSecond B line\nThird B line"
+
+test_concat_space_with_conditionals:
+  tests:
+    - source: |
+        ! local concat = space
+
+        + test *
+        * <star1> == a => First A line
+        ^ Second A line
+        ^ Third A line
+        - First B line
+        ^ Second B line
+        ^ Third B line
+
+    - input: "test A"
+      reply: "First A line Second A line Third A line"
+
+    - input: "test B"
+      reply: "First B line Second B line Third B line"
+
+test_concat_none_with_conditionals:
+  tests:
+    - source: |
+        + test *
+        * <star1> == a => First A line
+        ^ Second A line
+        ^ Third A line
+        - First B line
+        ^ Second B line
+        ^ Third B line
+
+    - input: "test A"
+      reply: "First A lineSecond A lineThird A line"
+
+    - input: "test B"
+      reply: "First B lineSecond B lineThird B line"

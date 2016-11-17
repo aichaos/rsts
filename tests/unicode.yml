@@ -1,0 +1,105 @@
+################################################################################
+# RiveScript Test Suite (RSTS)                                                 #
+# -----------------------------------------------------------------------------#
+# For information on the format of this file, see the README.md at the         #
+# root of the `rsts` repo.                                                     #
+################################################################################
+
+# Unicode Tests
+
+# TODO: punctuation
+
+unicode:
+  utf8: true
+  tests:
+    - source: |
+        ! sub who's = who is
+
+        + äh
+        - What's the matter?
+
+        + ブラッキー
+        - エーフィ
+
+        // Make sure %Previous continues working in UTF-8 mode.
+        + knock knock
+        - Who's there?
+
+        + *
+        % who is there
+
+        - <sentence> who?
+        + *
+        % * who
+        - Haha! <sentence>!
+
+        // And with UTF-8.
+        + tëll më ä pöëm
+        - Thërë öncë wäs ä män nämëd Tïm
+
+        + more
+        % thërë öncë wäs ä män nämëd tïm
+        - Whö nëvër qüïtë lëärnëd höw tö swïm
+
+        + more
+        % whö nëvër qüïtë lëärnëd höw tö swïm
+        - Hë fëll öff ä döck, änd sänk lïkë ä röck
+
+        + more
+        % hë fëll öff ä döck änd sänk lïkë ä röck
+        - Änd thät wäs thë ënd öf hïm.
+
+    - input: "äh"
+      reply: "What's the matter?"
+
+    - input: "ブラッキー"
+      reply: "エーフィ"
+
+    - input: "knock knock"
+      reply: "Who's there?"
+
+    - input: "orange"
+      reply: "Orange who?"
+
+    - input: "banana"
+      reply: "Haha! Banana!"
+
+    - input: "tëll më ä pöëm"
+      reply: "Thërë öncë wäs ä män nämëd Tïm"
+
+    - input: "more"
+      reply: "Whö nëvër qüïtë lëärnëd höw tö swïm"
+
+    - input: "more"
+      reply: "Hë fëll öff ä döck, änd sänk lïkë ä röck"
+
+    - input: "more"
+      reply: "Änd thät wäs thë ënd öf hïm."
+
+wildcards:
+  utf8: true
+  tests:
+    - source: |
+        + my name is _
+        - Nice to meet you, <star>.
+
+        + i am # years old
+        - A lot of people are <star> years old.
+
+        + *
+        - No match.
+
+    - input: "My name is Aiden"
+      reply: "Nice to meet you, aiden."
+
+    - input: "My name is Bảo"
+      reply: "Nice to meet you, bảo."
+
+    - input: "My name is 5"
+      reply: "No match."
+
+    - input: "I am five years old"
+      reply: "No match."
+
+    - input: "I am 5 years old"
+      reply: "A lot of people are 5 years old."

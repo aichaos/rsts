@@ -1,0 +1,23 @@
+{
+  "name": "rsts",
+  "version": "1.0.0",
+  "description": "RiveScript Test Suite for JavaScript.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aichaos/rsts.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aichaos/rsts/issues"
+  },
+  "homepage": "https://github.com/aichaos/rsts#readme",
+  "dependencies": {
+    "js-yaml": "^3.7.0",
+    "rivescript": "^1.17.0"
+  }
+}

@@ -1,0 +1,63 @@
+################################################################################
+# RiveScript Test Suite (RSTS)                                                 #
+# -----------------------------------------------------------------------------#
+# For information on the format of this file, see the README.md at the         #
+# root of the `rsts` repo.                                                     #
+################################################################################
+
+# Math Calculation Tests
+
+addition:
+  tests:
+    - source: |
+        + test counter
+        - <set counter=0>counter set
+
+        + show
+        - counter = <get counter>
+
+        + add
+        - <add counter=1>adding
+
+        + sub
+        - <sub counter=1>subbing
+
+        + div
+        - <set counter=10>
+        ^ <div counter=2>
+        ^ divving
+
+        + mult
+        - <set counter=10>
+        ^ <mult counter=2>
+        ^ multing
+
+    - input: "test counter"
+      reply: "counter set"
+
+    - input: "show"
+      reply: "counter = 0"
+
+    - input: "add"
+      reply: "adding"
+
+    - input: "show"
+      reply: "counter = 1"
+
+    - input: "sub"
+      reply: "subbing"
+
+    - input: "show"
+      reply: "counter = 0"
+
+    - input: "div"
+      reply: "divving"
+
+    - input: "show"
+      reply: "counter = 5"
+
+    - input: "mult"
+      reply: "multing"
+
+    - input: "show"
+      reply: "counter = 20"

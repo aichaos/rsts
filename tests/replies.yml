@@ -1,0 +1,375 @@
+################################################################################
+# RiveScript Test Suite (RSTS)                                                 #
+# -----------------------------------------------------------------------------#
+# For information on the format of this file, see the README.md at the         #
+# root of the `rsts` repo.                                                     #
+################################################################################
+
+# Reply Tests
+
+previous:
+  tests:
+    - source: |
+        ! sub who's  = who is
+        ! sub it's   = it is
+        ! sub didn't = did not
+
+        + knock knock
+        - Who's there?
+
+        + *
+        % who is there
+        - <sentence> who?
+
+        + *
+        % * who
+        - Haha! <sentence>!
+
+        + *
+        - I don't know.
+
+    - input: "knock knock"
+      reply: "Who's there?"
+
+    - input: "Canoe"
+      reply: "Canoe who?"
+
+    - input: "Canoe help me with my homework?"
+      reply: "Haha! Canoe help me with my homework!"
+
+    - input: "Hello"
+      reply: "I don't know."
+
+random:
+  tests:
+    - source: |
+        + test random response
+        - One.
+        - Two.
+
+        + test random tag
+        - This sentence has a random {random}word|bit{/random}.
+
+    - input: "Test random response"
+      reply:
+        - "One."
+        - "Two."
+
+    - input: "Test random tag"
+      reply:
+        - "This sentence has a random word."
+        - "This sentence has a random bit."
+
+continuations:
+  tests:
+    - source: |
+        + tell me a poem
+        - There once was a man named Tim,\s
+        ^ who never quite learned how to swim.\s
+        ^ He fell off a dock, and sank like a rock,\s
+        ^ and that was the end of him.
+
+    - input: "Tell me a poem."
+      reply: >
+        There once was a man named Tim,
+        who never quite learned how to swim.
+        He fell off a dock, and sank like a rock,
+        and that was the end of him.
+
+redirects:
+  tests:
+    - source: |
+        + hello
+        - Hi there!
+
+        + hey
+        @ hello
+
+        // Test the {@} tag with and without spaces.
+        + hi there
+        - {@hello}
+
+        + howdy
+        - {@ hello}
+
+        + hola
+        - {@ hello }
+
+    - input: "hello"
+      reply: "Hi there!"
+
+    - input: "hey"
+      reply: "Hi there!"
+
+    - input: "hi there"
+      reply: "Hi there!"
+
+    - input: "howdy"
+      reply: "Hi there!"
+
+    - input: "hola"
+      reply: "Hi there!"
+
+redirect_with_undefined_input:
+  tests:
+    - source: |
+        + test
+        - {topic=test}{@hi}
+
+        + test *
+        - {topic=test}<@>
+
+        > topic test
+          + hi
+          - hello
+
+          + *
+          - {topic=random}<@>
+        < topic
+
+        + *
+        - Wildcard "<star>"!
+
+    - input: "test"
+      reply: "hello"
+
+    - input: test x"
+      reply: 'Wildcard "x"!'
+
+    - input: "?"
+      reply: 'Wildcard ""!'
+
+redirect_with_undefined_vars:
+  tests:
+    # empty variable test
+    - source: |
+        ! var globaltest = set test name test
+
+        + test
+        - {topic=test}{@<get test_name>}
+
+        + test without redirect
+        - {topic=test}<get test_name>
+
+        + set test name *
+        - <set test_name=<star>>{@test}
+
+        + get global test
+        @ <bot globaltest>
+
+        + get bad global test
+        @ <bot badglobaltest>
+
+        > topic test
+          + test
+          - hello <get test_name>!{topic=random}
+
+          + *
+          - {topic=random}<@>
+        < topic
+
+        + *
+        - Wildcard "<star>"!
+
+    # No variable set, should go through wildcard.
+    - input: "test"
+      reply: 'Wildcard "undefined"!'
+    - input: "test without redirect"
+      reply: "undefined"
+
+    # Variable set, should respond with text
+    - input: "set test name test"
+      reply: "hello test!"
+
+    # Different variable set, should get wildcard
+    - input: "set test name newtest"
+      reply: 'Wildcard "newtest"!'
+
+    # Test redirects using bot variable
+    - input: "get global test"
+      reply: "hello test!"
+    - input: "get bad global test"
+      reply: 'Wildcard "undefined"!'
+
+conditions:
+  tests:
+    - source: |
+        + i am # years old
+        - <set age=<star>>OK.
+
+        + what can i do
+        * <get age> == undefined => I don't know.
+        * <get age> >  25 => Anything you want.
+        * <get age> == 25 => Rent a car for cheap.
+        * <get age> >= 21 => Drink.
+        * <get age> >= 18 => Vote.
+        * <get age> <  18 => Not much of anything.
+
+        + am i your master
+        * <get master> == true => Yes.
+        - No.
+
+    - input: "What can I do?"
+      reply: "I don't know."
+
+    - input: "I am 16 years old."
+      reply: "OK."
+
+    - input: "What can I do?"
+      reply: "Not much of anything."
+
+    - input: "I am 18 years old."
+      reply: "OK."
+
+    - input: "What can I do?"
+      reply: "Vote."
+
+    - input: "I am 20 years old."
+      reply: "OK."
+
+    - input: "What can I do?"
+      reply: "Vote."
+
+    - input: "I am 22 years old."
+      reply: "OK."
+
+    - input: "What can I do?"
+      reply: "Drink."
+
+    - input: "I am 24 years old."
+      reply: "OK."
+
+    - input: "What can I do?"
+      reply: "Drink."
+
+    - input: "I am 25 years old."
+      reply: "OK."
+
+    - input: "What can I do?"
+      reply: "Rent a car for cheap."
+
+    - input: "I am 27 years old."
+      reply: "OK."
+
+    - input: "What can I do?"
+      reply: "Anything you want."
+
+embedded_tags:
+  tests:
+    - source: |
+        + my name is *
+        * <get name> != undefined => <set oldname=<get name>>I thought\s
+          ^ your name was <get oldname>?
+          ^ <set name=<formal>>
+        - <set name=<formal>>OK.
+
+        + what is my name
+        - Your name is <get name>, right?
+
+        + html test
+        - <set name=<b>Name</b>>This has some non-RS <em>tags</em> in it.
+
+    - input: "What is my name?"
+      reply: "Your name is undefined, right?"
+
+    - input: "My name is Alice."
+      reply: "OK."
+
+    - input: "My name is Bob."
+      reply: "I thought your name was Alice?"
+
+    - input: "What is my name?"
+      reply: "Your name is Bob, right?"
+
+    - input: "HTML Test"
+      reply: "This has some non-RS <em>tags</em> in it."
+
+set_uservars:
+  tests:
+    - source: |
+        + what is my name
+        - Your name is <get name>.
+
+        + how old am i
+        - You are <get age>.
+
+    - set:
+        name: "Aiden"
+        age: "5"
+
+    - input: "What is my name?"
+      reply: "Your name is Aiden."
+
+    - input: "How old am I?"
+      reply: "You are 5."
+
+questionmark:
+  tests:
+    - source: |
+        + google *
+        - <a href="https://www.google.com/search?q=<star>">Results are here</a>
+
+    - input: "google coffeescript"
+      reply: '<a href="https://www.google.com/search?q=coffeescript">Results are here</a>'
+
+reply_arrays:
+  tests:
+    - source: |
+        ! array greek = alpha beta gamma
+        ! array test = testing trying
+        ! array format = <uppercase>|<lowercase>|<formal>|<sentence>
+
+        + test random array
+        - Testing (@greek) array.
+
+        + test two random arrays
+        - {formal}(@test){/formal} another (@greek) array.
+
+        + test nonexistant array
+        - This (@array) does not exist.
+
+        + test more arrays
+        - I'm (@test) more (@greek) (@arrays).
+
+        + test weird syntax
+        - This (@ greek) shouldn't work, and neither should this @test.
+
+        + random format *
+        - (@format)
+
+    - input: "test random array"
+      reply:
+        - "Testing alpha array."
+        - "Testing beta array."
+        - "Testing gamma array."
+
+    - input: "test two random arrays"
+      reply:
+        - "Testing another alpha array."
+        - "Testing another beta array."
+        - "Testing another gamma array."
+        - "Trying another alpha array."
+        - "Trying another beta array."
+        - "Trying another gamma array."
+
+    - input: "test nonexistant array"
+      reply: "This (@array) does not exist."
+
+    - input: "test more arrays"
+      reply:
+        - "I'm testing more alpha (@arrays)."
+        - "I'm testing more beta (@arrays)."
+        - "I'm testing more gamma (@arrays)."
+        - "I'm trying more alpha (@arrays)."
+        - "I'm trying more beta (@arrays)."
+        - "I'm trying more gamma (@arrays)."
+
+    - input: "test weird syntax"
+      reply: "This (@ greek) shouldn't work, and neither should this @test."
+
+    - input: "random format hello world"
+      reply:
+        - "HELLO WORLD"
+        - "hello world"
+        - "Hello World"
+        - "Hello world"

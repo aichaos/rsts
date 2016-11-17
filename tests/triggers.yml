@@ -1,0 +1,224 @@
+################################################################################
+# RiveScript Test Suite (RSTS)                                                 #
+# -----------------------------------------------------------------------------#
+# For information on the format of this file, see the README.md at the         #
+# root of the `rsts` repo.                                                     #
+################################################################################
+
+# Trigger Tests
+
+# TODO: empty piped arrays (from JS)
+
+atomic:
+  tests:
+    - source: |
+        + hello bot
+        - Hello human.
+
+        + what are you
+        - I am a RiveScript bot.
+
+    - input: "hello bot"
+      reply: "Hello human."
+
+    - input: "What are you?"
+      reply: "I am a RiveScript bot."
+
+wildcards:
+  tests:
+    - source: |
+        + my name is *
+        - Nice to meet you, <star>.
+
+        + * told me to say *
+        - Why did <star1> tell you to say <star2>?
+
+        + i am # years old
+        - A lot of people are <star>.
+
+        + i am _ years old
+        - Say that with numbers.
+
+        + i am * years old
+        - Say that with fewer words.
+
+    - input: "My name is Bob"
+      reply: "Nice to meet you, bob."
+
+    - input: "Bob told me to say hi"
+      reply: "Why did bob tell you to say hi?"
+
+    - input: "I am 5 years old"
+      reply: "A lot of people are 5."
+
+    - input: "i am five years old"
+      reply: "Say that with numbers."
+
+    - input: "i am twenty five years old"
+      reply: "Say that with fewer words."
+
+alternatives_and_optionals:
+  tests:
+    - source: |
+        + what (are|is) you
+        - I am a robot.
+
+        + what is your (home|office|cell) [phone] number
+        - It is 555-1234.
+
+        + [please|can you] ask me a question
+        - Why is the sky blue?
+
+        + (aa|bb|cc) [bogus]
+        - Matched.
+
+        + (yo|hi) [computer|bot] *
+        - Matched.
+
+    - input: "What are you?"
+      reply: "I am a robot."
+    - input: "What is you?"
+      reply: "I am a robot."
+
+    - input: "What is your home phone number?"
+      reply: "It is 555-1234."
+    - input: "What is your home number?"
+      reply: "It is 555-1234."
+    - input: "What is your cell phone number?"
+      reply: "It is 555-1234."
+    - input: "What is your office number?"
+      reply: "It is 555-1234."
+
+    - input: "Can you ask me a question?"
+      reply: "Why is the sky blue?"
+    - input: "Please ask me a question"
+      reply: "Why is the sky blue?"
+    - input: "ask me a question."
+      reply: "Why is the sky blue?"
+
+    # Test that optionals won't match when touching other parts of the message.
+    - input: "aa"
+      reply: "Matched."
+    - input: "bb"
+      reply: "Matched."
+    - input: "aa bogus"
+      reply: "Matched."
+    - input: "aabogus"
+      reply: "ERR: No Reply Matched"
+    - input: "bogus"
+      reply: "ERR: No Reply Matched"
+
+    - input: "hi Aiden"
+      reply: "Matched."
+    - input: "hi bot how are you?"
+      reply: "Matched."
+    - input: "yo computer what time is it?"
+      reply: "Matched."
+    - input: "yoghurt is yummy"
+      reply: "ERR: No Reply Matched"
+    - input: "hide and seek is fun"
+      reply: "ERR: No Reply Matched"
+    - input: "hip hip hurrah"
+      reply: "ERR: No Reply Matched"
+
+trigger_arrays:
+  tests:
+    - source: |
+        ! array colors = red blue green yellow white
+          ^ dark blue|light blue
+
+        + what color is my (@colors) *
+        - Your <star2> is <star1>.
+
+        + what color was * (@colors) *
+        - It was <star2>.
+
+        + i have a @colors *
+        - Tell me more about your <star>.
+
+    - input: "What color is my red shirt?"
+      reply: "Your shirt is red."
+
+    - input: "What color is my blue car?"
+      reply: "Your car is blue."
+
+    - input: "What color is my pink house?"
+      reply: "ERR: No Reply Matched"
+
+    - input: "What color is my dark blue jacket?"
+      reply: "Your jacket is dark blue."
+
+    - input: "What color was Napoleon's white horse?"
+      reply: "It was white."
+
+    - input: "What color was my red shirt?"
+      reply: "It was red."
+
+    - input: "I have a blue car."
+      reply: "Tell me more about your car."
+
+    - input: "I have a cyan car."
+      reply: "ERR: No Reply Matched"
+
+weighted_triggers:
+  tests:
+    - source: |
+        + * or something{weight=10}
+        - Or something. <@>
+
+        + can you run a google search for *
+        - Sure!
+
+        + hello *{weight=20}
+        - Hi there!
+
+        // Test that spaces before or after the {weight} tag are gobbled up along
+        // with the {weight} tag itself.
+
+        + something{weight=100}
+        - Weighted something
+
+        + something
+        - Unweighted something
+
+        + nothing {weight=100}
+        - Weighted nothing
+
+        + nothing
+        - Unweighted nothing
+
+        + {weight=100}everything
+        - Weighted everything
+
+        + everything
+        - Unweighted everything
+
+        + {weight=100}   blank
+        - Weighted blank
+
+        + blank
+        - Unweighted blank
+
+    - input: "Hello robot."
+      reply: "Hi there!"
+
+    - input: "Hello or something."
+      reply: "Hi there!"
+
+    - input: "Can you run a Google search for Node?"
+      reply: "Sure!"
+
+    - input: "Can you run a Google search for Node or something?"
+      reply: "Or something. Sure!"
+
+    - input: "something"
+      reply: "Weighted something"
+
+    - input: "nothing"
+      reply: "Weighted nothing"
+
+    - input: "everything"
+      reply: "Weighted everything"
+
+    - input: "blank"
+      reply: "Weighted blank"

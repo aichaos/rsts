@@ -1,0 +1,57 @@
+################################################################################
+# RiveScript Test Suite (RSTS)                                                 #
+# -----------------------------------------------------------------------------#
+# For information on the format of this file, see the README.md at the         #
+# root of the `rsts` repo.                                                     #
+################################################################################
+
+# Substitution Tests
+
+message_substitutions:
+  tests:
+    - source: |
+        + whats up
+        - nm.
+
+        + what is up
+        - Not much.
+
+    - input: "whats up"
+      reply: "nm."
+    - input: "what's up?"
+      reply: "nm."
+    - input: "what is up?"
+      reply: "Not much."
+
+    - source: |
+        ! sub whats  = what is
+        ! sub what's = what is
+
+    - input: "whats up"
+      reply: "Not much."
+    - input: "what's up?"
+      reply: "Not much."
+    - input: "what is up?"
+      reply: "Not much."
+
+person_substitutions:
+  tests:
+    - source: |
+        + say *
+        - <person>
+
+    - input: "say I am cool"
+      reply: "i am cool"
+
+    - input: "say You are dumb"
+      reply: "you are dumb"
+
+    - source: |
+        ! person i am    = you are
+        ! person you are = I am
+
+    - input: "say I am cool"
+      reply: "you are cool"
+
+    - input: "say You are dumb"
+      reply: "I am dumb"

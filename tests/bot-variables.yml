@@ -1,0 +1,61 @@
+################################################################################
+# RiveScript Test Suite (RSTS)                                                 #
+# -----------------------------------------------------------------------------#
+# For information on the format of this file, see the README.md at the         #
+# root of the `rsts` repo.                                                     #
+################################################################################
+
+# Bot/Global Variable Tests
+
+bot_variables:
+  tests:
+    - source: |
+        ! var name = Aiden
+        ! var age = 5
+
+        + what is your name
+        - My name is <bot name>.
+
+        + how old are you
+        - I am <bot age>.
+
+        + what are you
+        - I'm <bot gender>.
+
+        + happy birthday
+        - <bot age=6>Thanks!
+
+    - input: "What is your name?"
+      reply: "My name is Aiden."
+
+    - input: "How old are you?"
+      reply: "I am 5."
+
+    - input: "What are you?"
+      reply: "I'm undefined."
+
+    - input: "Happy birthday!"
+      reply: "Thanks!"
+
+    - input: "How old are you?"
+      reply: "I am 6."
+
+global_variables:
+  tests:
+    - source: |
+        ! global debug = false
+
+        + debug mode
+        - Debug mode is: <env debug>
+
+        + set debug mode *
+        - <env debug=<star>>Switched to <star>.
+
+    - input: "Debug mode."
+      reply: "Debug mode is: false"
+
+    - input: "Set debug mode true"
+      reply: "Switched to true."
+
+    - input: "Debug mode?"
+      reply: "Debug mode is: true"

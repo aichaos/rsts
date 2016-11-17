@@ -1,0 +1,75 @@
+################################################################################
+# RiveScript Test Suite (RSTS)                                                 #
+# -----------------------------------------------------------------------------#
+# For information on the format of this file, see the README.md at the         #
+# root of the `rsts` repo.                                                     #
+################################################################################
+
+# "BEGIN Block" Tests
+
+no_begin_block:
+  tests:
+    - source: |
+        + hello bot
+        - Hello human.
+
+    - input: "Hello bot"
+      reply: "Hello human."
+
+simple_begin_block:
+  tests:
+    - source: |
+        > begin
+          + request
+          - {ok}
+        < begin
+
+        + hello bot
+        - Hello human.
+
+    - input: "Hello bot."
+      reply: "Hello human."
+
+blocked_begin_block:
+  tests:
+    - source: |
+        > begin
+          + request
+          - Nope.
+        < begin
+
+        + hello bot
+        - Hello human.
+
+    - input: "Hello bot."
+      reply: "Nope."
+
+conditional_begin_block:
+  tests:
+    - source: |
+        > begin
+            + request
+            * <get met> == undefined => <set met=true>{ok}
+            * <get name> != undefined => <get name>: {ok}
+            - {ok}
+        < begin
+        + hello bot
+        - Hello human.
+
+        + my name is *
+        - <set name=<formal>>Hello, <get name>.
+    - input: "Hello bot."
+      reply: "Hello human."
+
+    - set:
+        met: true
+        name: "undefined"
+
+    - input: "My name is bob"
+      reply: "Hello, Bob."
+
+    - assert:
+        name: "Bob"
+
+    - input: "Hello bot"
+      reply: "Bob: Hello human."

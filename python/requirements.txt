@@ -1,0 +1,3 @@
+PyYAML==3.12
+rivescript==1.14.2
+six==1.10.0

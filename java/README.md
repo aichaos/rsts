@@ -6,4 +6,4 @@ To run this test:
 $ ./gradlew clean test
 ```
 
-See the test report at: /rsts/java/build/reports/tests/test/index.html
+See the test report at: `build/reports/tests/test/index.html`

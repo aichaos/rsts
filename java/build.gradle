@@ -1,11 +1,3 @@
-buildscript {
-	repositories {
-		jcenter()
-		mavenCentral()
-		mavenLocal()
-	}
-}
-
 ext {
 	antVersion        = "1.9.4"
 	groovyVersion     = "2.4.7"
@@ -22,7 +14,6 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
-	jcenter()
 	mavenCentral()
 	mavenLocal()
 }
@@ -35,13 +26,6 @@ dependencies {
 	testCompile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
 	testCompile("org.hamcrest:hamcrest-library:${hamcrestVersion}")
 	testCompile "org.yaml:snakeyaml:${snakeyamlVersion}"
-}
-
-idea {
-	module {
-		downloadJavadoc = true
-		downloadSources = true
-	}
 }
 
 task wrapper(type: Wrapper) {

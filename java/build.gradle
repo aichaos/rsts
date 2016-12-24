@@ -1,0 +1,50 @@
+buildscript {
+	repositories {
+		jcenter()
+		mavenCentral()
+		mavenLocal()
+	}
+}
+
+ext {
+	antVersion        = "1.9.4"
+	groovyVersion     = "2.4.7"
+	hamcrestVersion   = "1.3"
+	junitVersion      = "4.12"
+	rivescriptVersion = "0.7.0"
+	snakeyamlVersion  = "1.17"
+}
+
+apply plugin: "groovy"
+apply plugin: "idea"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+	jcenter()
+	mavenCentral()
+	mavenLocal()
+}
+
+dependencies {
+	testCompile "com.rivescript:rivescript-core:${rivescriptVersion}"
+	testCompile "junit:junit:${junitVersion}"
+	testCompile "org.apache.ant:ant:$antVersion"
+	testCompile "org.codehaus.groovy:groovy-all:${groovyVersion}"
+	testCompile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
+	testCompile("org.hamcrest:hamcrest-library:${hamcrestVersion}")
+	testCompile "org.yaml:snakeyaml:${snakeyamlVersion}"
+}
+
+idea {
+	module {
+		downloadJavadoc = true
+		downloadSources = true
+	}
+}
+
+task wrapper(type: Wrapper) {
+	description = "Generates gradlew[.bat] scripts."
+	gradleVersion = "3.2.1"
+}

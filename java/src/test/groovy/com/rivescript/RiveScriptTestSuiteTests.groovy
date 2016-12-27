@@ -62,7 +62,7 @@ class RiveScriptTestSuiteTests {
                 if (step.reply instanceof List) {
                     matcher = isIn(step.reply)
                 } else {
-                    matcher = is(step.reply)
+                    matcher = is(step.reply.trim())
                 }
                 assertThat("Did not get expected reply for input: ${step.input}", reply, matcher)
             } else if ("set" in step) {

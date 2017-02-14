@@ -3,7 +3,7 @@ ext {
 	groovyVersion     = "2.4.7"
 	hamcrestVersion   = "1.3"
 	junitVersion      = "4.12"
-	rivescriptVersion = "0.7.2"
+	rivescriptVersion = "0.8.0"
 	snakeyamlVersion  = "1.17"
 }
 
@@ -26,6 +26,13 @@ dependencies {
 	testCompile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
 	testCompile("org.hamcrest:hamcrest-library:${hamcrestVersion}")
 	testCompile "org.yaml:snakeyaml:${snakeyamlVersion}"
+}
+
+test {
+	outputs.upToDateWhen { false }
+	testLogging {
+		events "passed", "skipped", "failed"
+	}
 }
 
 task wrapper(type: Wrapper) {

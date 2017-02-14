@@ -45,12 +45,13 @@ class RiveScriptTestSuiteTests {
 
     @Test
     public void test() {
-        def debug = opts.debug ?: false
         def utf8 = opts.utf8 ?: false
         def username = opts.username ?: "localuser"
         def steps = opts.tests
 
-        RiveScript rs = new RiveScript(debug)
+        Config config = utf8 ? Config.utf8() : Config.basic()
+
+        RiveScript rs = new RiveScript(config)
 
         steps.each { step ->
             if ("source" in step) {

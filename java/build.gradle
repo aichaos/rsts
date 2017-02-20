@@ -37,5 +37,5 @@ test {
 
 task wrapper(type: Wrapper) {
 	description = "Generates gradlew[.bat] scripts."
-	gradleVersion = "3.3"
+	gradleVersion = "3.4"
 }

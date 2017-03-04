@@ -3,7 +3,7 @@ ext {
 	groovyVersion     = "2.4.7"
 	hamcrestVersion   = "1.3"
 	junitVersion      = "4.12"
-	rivescriptVersion = "0.8.1"
+	rivescriptVersion = "0.9.0"
 	snakeyamlVersion  = "1.17"
 }
 

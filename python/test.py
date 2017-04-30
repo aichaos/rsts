@@ -7,8 +7,10 @@ from __future__ import unicode_literals
 import codecs
 from glob import glob
 from os.path import basename
-import six
+import re
 from rivescript import RiveScript
+from rivescript.exceptions import RiveScriptError
+import six
 import yaml
 
 class TestCase:
@@ -61,7 +63,20 @@ class TestCase:
                 )
 
     def input(self, step):
-        reply = self.rs.reply(self.username, step["input"])
+        try:
+            reply = self.rs.reply(self.username, step["input"], errors_as_replies=False)
+        except RiveScriptError as e:
+            error = re.sub(r'[\[\]]+', '', e.error_message)
+            if error != step["reply"]:
+                raise AssertionError("Got unexpected exception from reply() for input: {}\n"
+                    "Expected: {}\n"
+                    "     Got: {}".format(
+                        step["input"],
+                        repr(step["reply"]),
+                        repr(error),
+                    ))
+            return
+
         if type(step["reply"]) is list:
             ok = False
             for candidate in step["reply"]:

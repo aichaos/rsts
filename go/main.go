@@ -12,7 +12,6 @@ import (
 	yaml "gopkg.in/yaml.v2"
 
 	rivescript "github.com/aichaos/rivescript-go"
-	rss "github.com/aichaos/rivescript-go/src"
 )
 
 // TestCase wraps each RiveScript test.
@@ -166,7 +165,7 @@ func (t *TestCase) input(step TestStep) error {
 func (t *TestCase) expectedError(step TestStep, reply string, err error) error {
 	// Map of expected errors to their string counterpart from the test file.
 	goodErrors := map[string]error{
-		"ERR: No Reply Matched": rss.ErrNoTriggerMatched,
+		"ERR: No Reply Matched": rivescript.ErrNoTriggerMatched,
 	}
 
 	if expect, ok := goodErrors[step.Reply.(string)]; ok {

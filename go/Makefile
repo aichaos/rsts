@@ -1,4 +1,4 @@
 all: run
 
 run:
-	GOPATH="$(shell pwd):${GOPATH}" go run main.go
+	go run main.go

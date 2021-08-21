@@ -8,10 +8,14 @@ If you're developing your own implementation of RiveScript, passing the tests
 in this set should give you the confidence that your implementation is at least
 as correct as the official implementations.
 
-At the time of writing, only the JavaScript version passes the tests, as this
-was the initial target. The bugs found in the other versions that cause them to
-fail the tests will be fixed shortly. Eventually all five of the primary
-implementations of RiveScript should pass all the tests.
+As of August 20, 2021 the following official implementations of RiveScript
+pass the entire test suite:
+
+* [x] Go
+* [x] Java
+* [x] JavaScript
+* [ ] Perl (couple issues, [see report](perl/))
+* [x] Python
 
 The YAML test files are in the `tests/` directory, and individual test runner
 scripts for each programming language are in their respective directories.

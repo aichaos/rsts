@@ -43,7 +43,7 @@ class TestCase:
                 errors = True
                 break
 
-        sym = "❌" if errors else "✓"
+        sym = "×" if errors else "✓"
         print(sym + " " + self.file + "#" + self.name)
 
     def source(self, step):

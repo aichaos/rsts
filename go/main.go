@@ -89,7 +89,7 @@ func (t *TestCase) Run() {
 
 	var sym string
 	if hasErrors {
-		sym = `❌`
+		sym = `×`
 	} else {
 		sym = `✓`
 	}
